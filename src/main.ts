@@ -30,4 +30,12 @@ app.use(createPinia())
 app.use(router)
 app.use(Toast, toastOptions)
 
+// Handle initial path from refresh
+const initialPath = sessionStorage.getItem('initialPath')
+if (initialPath) {
+  // Remove the stored path immediately to prevent redirect loops
+  sessionStorage.removeItem('initialPath')
+  router.push(initialPath)
+}
+
 app.mount('#app')

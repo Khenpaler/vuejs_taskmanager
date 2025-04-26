@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="">
+  <head>
+    <meta charset="UTF-8">
+    <link rel="icon" href="/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <script>
+      // This helps with direct URL access in SPA
+      (function() {
+        // If using a custom domain, you might need to adjust this check
+        const currentDomain = window.location.hostname;
+        if (window.location.pathname !== '/' && 
+            !window.location.pathname.startsWith('/assets/') && 
+            !window.location.pathname.startsWith('/images/')) {
+          console.log('SPA route handling for direct access');
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html> 

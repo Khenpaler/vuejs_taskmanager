@@ -12,6 +12,11 @@ services:
         name: Cache-Control
         value: no-cache
     routes:
+      # SPA Route - handle all HTML requests
       - type: rewrite
-        source: /*
+        source: /(.*)(.html)$
+        destination: /index.html
+      # SPA Route - handle all direct navigation routes
+      - type: rewrite
+        source: /(.*)
         destination: /index.html 
