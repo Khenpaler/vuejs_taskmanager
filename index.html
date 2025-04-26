@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="">
+<html lang="en">
   <head>
     <meta charset="UTF-8">
     <link rel="icon" href="/favicon.ico">
@@ -7,16 +7,29 @@
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
-    <base href="/" />
+    <base href="/">
     <title>Task Manager</title>
     <script>
-      // This helps ensure proper SPA routing on page refresh
+      // Special handling for Render SPA routing
       (function() {
-        // Capture the current URL path
-        const path = window.location.pathname;
-        // Store in sessionStorage so the app can redirect after loading
-        if (path !== '/' && !path.startsWith('/assets/')) {
-          sessionStorage.setItem('initialPath', path);
+        // Check for redirect parameter (from 404.html)
+        var redirect = window.location.search.match(/redirect=([^&]+)/);
+        if (redirect && redirect[1]) {
+          try {
+            // Decode the path and store it
+            var path = decodeURIComponent(redirect[1]);
+            sessionStorage.setItem('initialPath', path);
+            // Clean up the URL by removing the query parameter
+            window.history.replaceState(null, null, path);
+          } catch (e) {
+            console.error('Error handling redirect:', e);
+          }
+        } else {
+          // Normal direct URL access - save path for SPA routing
+          var path = window.location.pathname;
+          if (path !== '/' && !path.startsWith('/assets/') && !path.startsWith('/static/')) {
+            sessionStorage.setItem('initialPath', path);
+          }
         }
       })();
     </script>

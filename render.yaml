@@ -2,7 +2,7 @@ services:
   - type: web
     name: task-manager-frontend
     runtime: static
-    buildCommand: npm install && npm run build
+    buildCommand: npm install && npm run build:render
     staticPublishPath: ./dist
     envVars:
       - key: VITE_API_URL
@@ -12,11 +12,13 @@ services:
         name: Cache-Control
         value: no-cache
     routes:
-      # SPA Route - handle all HTML requests
+      # First handle actual static assets
       - type: rewrite
-        source: /(.*)(.html)$
-        destination: /index.html
-      # SPA Route - handle all direct navigation routes
+        source: /assets/(.*) 
+        destination: /assets/$1
+      # Then handle all other paths by directing to index.html
       - type: rewrite
         source: /(.*)
-        destination: /index.html 
+        destination: /index.html
+    # Ensure any 404 routes go back to index.html (crucial for SPA routing)
+    notFoundPage: index.html 

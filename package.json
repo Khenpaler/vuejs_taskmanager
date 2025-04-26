@@ -12,7 +12,9 @@
     "preview": "vite preview",
     "build-only": "vite build",
     "type-check": "vue-tsc --build",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "build:render": "npm run build && npm run postbuild",
+    "postbuild": "cp public/_redirects dist/ && cp public/404.html dist/ && cp index.html dist/200.html"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.1.4",
