@@ -45,10 +45,6 @@
                 </div>
               </div>
             </template>
-            <template v-else>
-              <router-link to="/auth/login" class="text-gray-700 hover:text-blue-600 font-medium">Login</router-link>
-              <router-link to="/auth/register" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition font-medium">Register</router-link>
-            </template>
           </div>
         </div>
       </nav>
