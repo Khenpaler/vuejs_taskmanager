@@ -17,6 +17,11 @@ const isLoadingPage = computed(() => {
   return route.path === '/loading'
 })
 
+// Check if the current route is auth related
+const isAuthRoute = computed(() => {
+  return route.path.startsWith('/auth/')
+})
+
 // Watch for route changes to handle direct URL access better
 watch(
   () => route.path,
@@ -63,31 +68,14 @@ onMounted(() => {
   <!-- For all other routes, use the DefaultLayout -->
   <template v-else>
     <DefaultLayout>
-      <RouterView v-slot="{ Component }">
+      <RouterView v-slot="{ Component, route }">
         <Transition 
-          name="fade"
+          :name="isAuthRoute ? 'slide-fade-fixed' : 'fade'"
           mode="out-in"
         >
-          <component :is="Component" />
+          <component :is="Component" :key="route.path" />
         </Transition>
       </RouterView>
     </DefaultLayout>
   </template>
 </template>
-
-<style>
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 150ms ease;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
-}
-</style>
