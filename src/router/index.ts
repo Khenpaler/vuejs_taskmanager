@@ -17,13 +17,31 @@ export const shouldSkipLoading = () => {
   return timeElapsed < LOADING_COOLDOWN // Skip if within cooldown period
 }
 
+// Create router instance with proper configuration
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
+  // Improve handling of navigation failures
+  strict: false,
+  // Modify scrolling behavior 
+  scrollBehavior(to, from, savedPosition) {
+    if (savedPosition) {
+      return savedPosition
+    } else {
+      return { top: 0 }
+    }
+  }
+})
+
+// Handle errors
+router.onError((error) => {
+  console.error('Router error:', error)
 })
 
 // Navigation guard
 router.beforeEach(async (to, from, next) => {
+  console.log(`Route navigation: ${from.path} -> ${to.path}`)
+  
   const authStore = useAuthStore()
   // Check for token in localStorage to determine auth status
   const hasToken = !!localStorage.getItem('token')
@@ -35,9 +53,9 @@ router.beforeEach(async (to, from, next) => {
     if (shouldSkipLoading()) {
       // Redirect based on auth status
       if (isAuthenticated || hasToken) {
-        next('/tasks')
+        next({ path: '/tasks', replace: true })
       } else {
-        next('/auth/login')
+        next({ path: '/auth/login', replace: true })
       }
       return
     }
@@ -52,13 +70,13 @@ router.beforeEach(async (to, from, next) => {
     if (shouldSkipLoading()) {
       // Redirect based on auth status
       if (isAuthenticated || hasToken) {
-        next('/tasks')
+        next({ path: '/tasks', replace: true })
       } else {
-        next('/auth/login')
+        next({ path: '/auth/login', replace: true })
       }
       return
     } else {
-      next('/loading')
+      next({ path: '/loading', replace: true })
       return
     }
   }
@@ -70,7 +88,7 @@ router.beforeEach(async (to, from, next) => {
     } catch (error) {
       // Token is invalid, redirect to login
       localStorage.removeItem('token')
-      next('/auth/login')
+      next({ path: '/auth/login', replace: true })
       return
     }
   }
@@ -81,19 +99,27 @@ router.beforeEach(async (to, from, next) => {
   // Handle protected routes - redirect to login if not authenticated
   if (to.meta.requiresAuth && !updatedAuthStatus) {
     console.log('Protected route accessed without auth, redirecting to login')
-    next('/auth/login')
+    next({ path: '/auth/login', replace: true })
     return
   }
 
   // Handle guest-only routes (login/register) - redirect to tasks if authenticated
   if (to.meta.requiresGuest && updatedAuthStatus) {
     console.log('Guest route accessed while authenticated, redirecting to tasks')
-    next('/tasks')
+    next({ path: '/tasks', replace: true })
     return
   }
 
   // For all other routes, proceed
   next()
+})
+
+// After each navigation
+router.afterEach((to, from) => {
+  // Update title
+  document.title = to.meta.title 
+    ? `${to.meta.title} | Task Manager` 
+    : 'Task Manager'
 })
 
 export default router

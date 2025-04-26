@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, computed } from 'vue'
+import { onMounted, computed, watch } from 'vue'
 import { RouterView, useRoute, useRouter } from 'vue-router'
 
 import { useAuthStore } from './stores/auth'
@@ -17,7 +17,17 @@ const isLoadingPage = computed(() => {
   return route.path === '/loading'
 })
 
+// Watch for route changes to handle direct URL access better
+watch(
+  () => route.path,
+  (newPath) => {
+    console.log(`Route changed to: ${newPath}`)
+  }
+)
+
 onMounted(() => {
+  console.log('App mounted, current route:', route.path)
+  
   // Use the new checkAuth method
   authStore.checkAuth()
   

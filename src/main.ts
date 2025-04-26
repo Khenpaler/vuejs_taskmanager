@@ -9,6 +9,7 @@ import App from './App.vue'
 import router from './router'
 
 const app = createApp(App)
+const pinia = createPinia()
 
 // Toast configuration
 const toastOptions = {
@@ -26,16 +27,28 @@ const toastOptions = {
   rtl: false
 }
 
-app.use(createPinia())
+app.use(pinia)
 app.use(router)
 app.use(Toast, toastOptions)
+
+// Mount the app
+app.mount('#app')
 
 // Handle initial path from refresh
 const initialPath = sessionStorage.getItem('initialPath')
 if (initialPath) {
+  console.log('Restoring initial path:', initialPath)
   // Remove the stored path immediately to prevent redirect loops
   sessionStorage.removeItem('initialPath')
-  router.push(initialPath)
+  
+  // Small delay to ensure app is fully mounted
+  setTimeout(() => {
+    console.log('Navigating to restored path:', initialPath)
+    router.push({
+      path: initialPath,
+      replace: true
+    }).catch(err => {
+      console.error('Error restoring path:', err)
+    })
+  }, 100) 
 }
-
-app.mount('#app')

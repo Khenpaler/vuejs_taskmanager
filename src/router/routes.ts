@@ -47,7 +47,7 @@ const routes: RouteRecordRaw[] = [
   ...publicRoutes,
   ...protectedRoutes,
   {
-    path: '/:pathMatch(.*)*',
+    path: '/:catchAll(.*)',
     name: 'notFound',
     component: () => import('../views/NotFound.vue')
   }
