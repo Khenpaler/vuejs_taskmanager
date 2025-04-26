@@ -48,7 +48,8 @@ const routes: RouteRecordRaw[] = [
   ...protectedRoutes,
   {
     path: '/:pathMatch(.*)*',
-    redirect: '/loading'
+    name: 'notFound',
+    component: () => import('../views/NotFound.vue')
   }
 ]
 

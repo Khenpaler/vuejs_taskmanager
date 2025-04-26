@@ -20,6 +20,11 @@ export default defineConfig({
   server: {
     host: '0.0.0.0', // This allows access from any IP
     port: 5173,
+    cors: true,
+    // SPA fallback
+    fs: {
+      allow: ['..']
+    }
   },
   // Base URL for production build
   base: '/',
