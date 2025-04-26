@@ -1,6 +1,6 @@
-# task-manager
+# Task Manager Frontend
 
-This template should help get you started developing with Vue 3 in Vite.
+A Vue.js frontend for the Task Manager application.
 
 ## Recommended IDE Setup
 
@@ -31,3 +31,51 @@ npm run dev
 ```sh
 npm run build
 ```
+
+### Format Files with Prettier
+
+```sh
+npm run format
+```
+
+## Deployment on Render
+
+This project is configured for deployment on [Render](https://render.com/).
+
+### Deployment Steps
+
+1. **Push your code to a Git repository** (GitHub, GitLab, etc.)
+
+2. **Create a new Static Site on Render**:
+   - Log in to your Render account
+   - Click "New +" and select "Static Site"
+   - Connect your Git repository
+   - Fill in the details:
+     - Name: `task-manager-frontend` (or your preferred name)
+     - Branch: `main` (or your deployment branch)
+     - Build Command: `npm install && npm run build`
+     - Publish Directory: `dist`
+
+3. **Configure Environment Variables**:
+   - Set the environment variable in the Render dashboard:
+     - `VITE_API_URL`: The URL of your backend API, e.g., `https://your-backend-api.onrender.com/api`
+
+4. **Configure Redirect Rules**:
+   - In the Render dashboard, go to "Redirects/Rewrites"
+   - Add a rule:
+     - Source: `/*`
+     - Destination: `/index.html`
+     - Type: Rewrite
+   - This ensures that the SPA routing works correctly
+
+5. **Deploy**:
+   - Click "Create Static Site" and wait for the deployment to complete
+
+### Automatic Deployment with render.yaml
+
+Alternatively, you can use the included `render.yaml` file for Blueprint deployment:
+
+1. In the Render dashboard, go to "Blueprints" and click "New Blueprint Instance"
+2. Connect your Git repository
+3. Render will automatically detect the `render.yaml` file and configure the service
+4. Review the settings and deploy

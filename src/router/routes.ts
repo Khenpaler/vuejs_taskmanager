@@ -4,17 +4,26 @@ export const publicRoutes: RouteRecordRaw[] = [
   {
     path: '/loading',
     name: 'loading',
-    component: () => import('../views/LoadingView.vue')
+    component: () => import('../views/LoadingView.vue'),
+    meta: {
+      isLoading: true
+    }
   },
   {
     path: '/auth/login',
     name: 'login',
     component: () => import('../views/auth/login/index.vue'),
+    meta: {
+      requiresGuest: true
+    }
   },
   {
     path: '/auth/register',
     name: 'register',
     component: () => import('../views/auth/register/index.vue'),
+    meta: {
+      requiresGuest: true
+    }
   }
 ]
 
@@ -30,11 +39,16 @@ export const protectedRoutes: RouteRecordRaw[] = [
 ]
 
 const routes: RouteRecordRaw[] = [
+  {
+    path: '/',
+    name: 'root',
+    redirect: '/loading'
+  },
   ...publicRoutes,
   ...protectedRoutes,
   {
-    path: '/',
-    redirect: '/tasks'
+    path: '/:pathMatch(.*)*',
+    redirect: '/loading'
   }
 ]
 

@@ -1,33 +1,83 @@
 <script setup lang="ts">
-import { RouterView } from 'vue-router'
-import { onMounted } from 'vue'
-import { useRouter } from 'vue-router'
+import { onMounted, computed } from 'vue'
+import { RouterView, useRoute, useRouter } from 'vue-router'
+
 import { useAuthStore } from './stores/auth'
+
 import DefaultLayout from './components/layouts/DefaultLayout.vue'
 
+import { shouldSkipLoading } from './router/index'
+
 const router = useRouter()
+const route = useRoute()
 const authStore = useAuthStore()
+
+// Determine if current route is loading page
+const isLoadingPage = computed(() => {
+  return route.path === '/loading'
+})
 
 onMounted(() => {
   // Use the new checkAuth method
   authStore.checkAuth()
+  
+  // Force navigation to loading page first, but respect cooldown
+  if (route.path === '/') {
+    if (shouldSkipLoading()) {
+      // Skip loading if within cooldown period
+      if (authStore.isAuthenticated) {
+        router.replace('/tasks')
+      } else {
+        router.replace('/auth/login')
+      }
+    } else {
+      router.replace('/loading')
+    }
+  }
 })  
 </script>
 
 <template>
-  <DefaultLayout>
+  <!-- For loading page, don't use any layout -->
+  <template v-if="isLoadingPage">
     <RouterView v-slot="{ Component }">
       <Transition 
-        enter-active-class="transition duration-150 ease-out"
-        enter-from-class="opacity-0"
-        enter-to-class="opacity-100"
-        leave-active-class="transition duration-150 ease-in"
-        leave-from-class="opacity-100"
-        leave-to-class="opacity-0"
+        name="fade"
         mode="out-in"
       >
         <component :is="Component" />
       </Transition>
     </RouterView>
-  </DefaultLayout>
+  </template>
+  
+  <!-- For all other routes, use the DefaultLayout -->
+  <template v-else>
+    <DefaultLayout>
+      <RouterView v-slot="{ Component }">
+        <Transition 
+          name="fade"
+          mode="out-in"
+        >
+          <component :is="Component" />
+        </Transition>
+      </RouterView>
+    </DefaultLayout>
+  </template>
 </template>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 150ms ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+}
+</style>
