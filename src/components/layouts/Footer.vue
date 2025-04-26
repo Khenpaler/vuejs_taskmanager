@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 
-const showFooter = ref(true) // Default to visible
+const showFooter = ref(false)
 let lastScrollY = 0
 let ticking = false
 
