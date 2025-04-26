@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
 
-const showFooter = ref(false)
+const showFooter = ref(false) // Hidden by default
 let lastScrollY = 0
 let ticking = false
 
@@ -25,13 +25,8 @@ const updateFooterVisibility = () => {
   const pageHeight = document.documentElement.scrollHeight
   const viewportHeight = window.innerHeight
   
-  // If page is shorter or same as viewport, always show footer
-  if (pageHeight <= viewportHeight) {
-    showFooter.value = true
-  } else {
-    // On longer pages, show when scrolled down at least 100px
-    showFooter.value = window.scrollY > 100 || window.scrollY + viewportHeight >= pageHeight - 50
-  }
+  // Only show footer when scrolled
+  showFooter.value = window.scrollY > 100 || (pageHeight > viewportHeight && window.scrollY > 0)
   
   // Reset ticking flag
   ticking = false
