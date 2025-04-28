@@ -1,7 +1,11 @@
 <template>
-  <div class="max-w-4xl mx-auto p-4 flex flex-col items-start">
+  <div class="max-w-4xl mx-auto p-4 flex flex-col items-start justify-start min-h-[calc(100vh-200px)]">
     <!-- Task Header -->
-    <TaskHeader @new-task="handleNewTask" class="w-full" />
+    <TaskHeader 
+      @new-task="handleNewTask" 
+      class="w-full self-start"
+      :hide-new-button="!tasksStore.tasks.length" 
+    />
 
     <!-- Task List with all states -->
     <TaskList
@@ -12,11 +16,11 @@
       @edit-task="editTask"
       @delete-task="confirmDelete"
       @new-task="handleNewTask"
-      class="w-full"
+      class="w-full self-start"
     />
 
-    <!-- Pagination -->
-    <div class="mt-4 w-full">
+    <!-- Pagination - Only show if there are tasks -->
+    <div v-if="tasksStore.tasks.length" class="mt-4 w-full self-start">
       <Pagination
         :total-items="tasksStore.totalCount"
         :items-per-page="tasksStore.pageSize"

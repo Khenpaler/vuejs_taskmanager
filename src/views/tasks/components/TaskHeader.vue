@@ -5,6 +5,7 @@
       <p class="text-gray-600 mt-1">Manage your tasks and stay organized</p>
     </div>
     <button 
+      v-if="!hideNewButton"
       @click="$emit('newTask')" 
       class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-md shadow-sm transition-colors duration-200"
     >
@@ -18,4 +19,10 @@
 
 <script setup lang="ts">
 defineEmits(['newTask'])
+defineProps({
+  hideNewButton: {
+    type: Boolean,
+    default: false
+  }
+})
 </script> 
