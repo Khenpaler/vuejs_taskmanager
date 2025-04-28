@@ -1,7 +1,7 @@
 <template>
-  <div class="max-w-4xl mx-auto p-4">
+  <div class="max-w-4xl mx-auto p-4 flex flex-col items-start">
     <!-- Task Header -->
-    <TaskHeader @new-task="handleNewTask" />
+    <TaskHeader @new-task="handleNewTask" class="w-full" />
 
     <!-- Task List with all states -->
     <TaskList
@@ -12,10 +12,11 @@
       @edit-task="editTask"
       @delete-task="confirmDelete"
       @new-task="handleNewTask"
+      class="w-full"
     />
 
     <!-- Pagination -->
-    <div class="mt-4">
+    <div class="mt-4 w-full">
       <Pagination
         :total-items="tasksStore.totalCount"
         :items-per-page="tasksStore.pageSize"
